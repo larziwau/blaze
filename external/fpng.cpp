@@ -100,16 +100,16 @@
 	#error __BYTE_ORDER undefined. Compile with -D__BYTE_ORDER=1234 for little endian or -D__BYTE_ORDER=4321 for big endian.
 #endif
 
-// NOTE: globed addition
+// Globed Addition
 #if defined(__clang__) || defined(__GNUC__)
-# define FPNG_SSE41 __attribute__((__target__("sse4.1")))
-# define FPNG_PCLMUL __attribute__((__target__("pclmul")))
+    #define FPNG_SSE41 __attribute__((__target__("sse4.1")))
+    #define FPNG_PCLMUL __attribute__((__target__("pclmul")))
 #else // __clang__
-// on msvc there's no need to set these
-# define FPNG_SSE41
-# define FPNG_PCLMUL
+    // On MSVC there's no need to set these
+    #define FPNG_SSE41
+    #define FPNG_PCLMUL
 #endif // __clang__
-// NOTE: end globed addition
+// End Globed Addition
 
 namespace fpng
 {
@@ -3008,7 +3008,7 @@ do_literals:
 			const png_chunk_prefix* pChunk = reinterpret_cast<const png_chunk_prefix*>(pImage_u8);
 
 			const uint32_t chunk_len = READ_BE32(&pChunk->m_length);
-			if ((src_ofs + sizeof(uint32_t) + chunk_len + sizeof(uint32_t)) > image_size)
+			if ((src_ofs + sizeof(uint32_t) * 2 + (uint64_t)chunk_len + sizeof(uint32_t)) > image_size)
 				return FPNG_DECODE_FAILED_CHUNK_PARSING;
 
 			for (uint32_t i = 0; i < 4; i++)
